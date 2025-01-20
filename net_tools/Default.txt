@@ -1,4 +1,1 @@
-8.8.8.8.in-addr.arpa	name = dns.google.
-
-Authoritative answers can be found from:
-
+Sending magic packet to 255.255.255.255:9 with 00:e0:6c:68:2d:e7
