@@ -2,33 +2,65 @@ import requests
 import platform
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
-def get(url):
+#Comando /get
+def get(url, file_name='Default'):
     # Ejecutar el comando y mostrar la salida
     response =requests.get(url)
     content_type = response.headers.get("Content-Type")
 
     # Comprobar el código de estado de la respuesta
     if response.status_code == 200:
-        content_type = response.headers.get("Content-Type")
-        if content_type == "application/json":
-            print("La respuesta obtenida json")
-        if content_type == "text/html":
-            print("La respuesta obtenida text/html")
-        if content_type == "text/plain":
-            print("La respuesta obtenida text/plain")
-        if content_type == "application/xml":
-            print("La respuesta obtenida application/xml")
-        if content_type == "image/png":
-            print("La respuesta obtenida image/png")
-        if content_type == "image/jpeg":
-            print("La respuesta obtenida imagen/jpeg")
-            #data = response.json()
-            #print("Respuesta obtenida:", data)
+        if "application/json" in content_type:
+            file_name += ".json"
+            with open(file_name, "w", encoding="utf-8") as file:
+                file.write(response.text)
+            print(f"La respuesta obtenida es JSON y se guardó como {file_name}")
+            return file_name
 
-        return response.status_code
-    else:
-        print(f"Error al realizar la petición. Código de estado: {response.status_code}")
-        return response.status_code
+        elif "text/html" in content_type:
+            file_name += ".html"
+            with open(file_name, "w", encoding="utf-8") as file:
+                file.write(response.text)
+            print(f"La respuesta obtenida es HTML y se guardó como {file_name}")
+            return file_name
+
+        elif "text/plain" in content_type:
+            file_name += ".txt"
+            with open(file_name, "w", encoding="utf-8") as file:
+                file.write(response.text)
+            print(f"La respuesta obtenida es texto plano y se guardó como {file_name}")
+            return file_name
+
+        elif "application/xml" in content_type or "text/xml" in content_type:
+            file_name += ".xml"
+            with open(file_name, "w", encoding="utf-8") as file:
+                file.write(response.text)
+            print(f"La respuesta obtenida es XML y se guardó como {file_name}")
+            return file_name
+
+        elif "image/png" in content_type:
+            file_name += ".png"
+            with open(file_name, "wb") as file:
+                file.write(response.content)
+            print(f"La respuesta obtenida es una imagen PNG y se guardó como {file_name}")
+            return file_name
+
+        elif "image/jpeg" in content_type:
+            file_name += ".jpeg"
+            with open(file_name, "wb") as file:
+                file.write(response.content)
+            print(f"La respuesta obtenida es una imagen JPEG y se guardó como {file_name}")
+            return file_name
+
+        else:
+            file_name += ".bin"
+            with open(file_name, "wb") as file:
+                file.write(response.content)
+            print(f"Tipo de contenido no reconocido. La respuesta se guardó como {file_name}")
+            return file_name
+#Comando /post
+
+
 
 if __name__ == "__main__":
     get('https://api.ipify.org/?format=json')

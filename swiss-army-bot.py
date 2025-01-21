@@ -58,6 +58,7 @@ async def handle_nslookup(update: Update, context: CallbackContext):
         await update.message.reply_text(contenido)
     else:
         await update.message.reply_text("Por favor, proporciona una dirección IP o dominio para hacer dig. Ejemplo: /nslookup google.com")
+
 #Comando /traceroute
 async def handle_traceroute(update: Update, context: CallbackContext):
     if context.args:
@@ -70,6 +71,7 @@ async def handle_traceroute(update: Update, context: CallbackContext):
         await update.message.reply_text(contenido)
     else:
         await update.message.reply_text("Por favor, proporciona una dirección IP o dominio")
+
 #Comando /wakeonlan
 async def handle_wakeonlan(update: Update, context: CallbackContext):
     if context.args:
@@ -82,14 +84,19 @@ async def handle_wakeonlan(update: Update, context: CallbackContext):
         await update.message.reply_text(contenido)
     else:
         await update.message.reply_text("Por favor, proporciona una dirección MAC")
+
 #Comando /get
 async def handle_get(update: Update, context: CallbackContext):
     if context.args:
         url= context.args[0]
-        result = get(url)
-        await update.message.reply_text(result)
+        output_filename = generar_cadena()
+        result = get(url, output_filename)
+        with open(result, "rb") as file:
+            await update.message.reply_document(document=file)
+        os.remove(result)
     else:
         await update.message.reply_text("Por favor, proporciona una URL")
+
 #Comando /help
 async def help_command(update: Update, context: CallbackContext):
     await update.message.reply_text(
