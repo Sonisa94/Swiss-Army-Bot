@@ -97,6 +97,70 @@ async def handle_get(update: Update, context: CallbackContext):
     else:
         await update.message.reply_text("Por favor, proporciona una URL")
 
+#Comando /post
+async def handle_post(update: Update, context: CallbackContext):
+    if context.args:
+        url= context.args[0]
+        output_filename = generar_cadena()
+        result = post(url, output_filename)
+        try:
+            if result != 0:
+                with open(result, "rb") as file:
+                    await update.message.reply_document(document=file)
+                os.remove(result)
+        except Exception:
+            await update.message.reply_text("Metodo no soportado por esa URL")
+    else:
+        await update.message.reply_text("Por favor, proporciona una URL")
+
+#Comando /put
+async def handle_put(update: Update, context: CallbackContext):
+    if context.args:
+        url= context.args[0]
+        output_filename = generar_cadena()
+        result = post(url, output_filename)
+        try:
+            if result != 0:
+                with open(result, "rb") as file:
+                    await update.message.reply_document(document=file)
+                os.remove(result)
+        except Exception:
+            await update.message.reply_text("Metodo no soportado por esa URL")
+    else:
+        await update.message.reply_text("Por favor, proporciona una URL")
+
+#Comando /options
+async def handle_options(update: Update, context: CallbackContext):
+    if context.args:
+        url= context.args[0]
+        output_filename = generar_cadena()
+        result = options(url, output_filename)
+        try:
+            if result != 0:
+                with open(result, "rb") as file:
+                    await update.message.reply_document(document=file)
+                os.remove(result)
+        except Exception:
+            await update.message.reply_text("Metodo no soportado por esa URL")
+    else:
+        await update.message.reply_text("Por favor, proporciona una URL")
+
+#Comando /patch
+async def handle_patch(update: Update, context: CallbackContext):
+    if context.args:
+        url= context.args[0]
+        output_filename = generar_cadena()
+        result = patch(url, output_filename)
+        try:
+            if result != 0:
+                with open(result, "rb") as file:
+                    await update.message.reply_document(document=file)
+                os.remove(result)
+        except Exception:
+            await update.message.reply_text("Metodo no soportado por esa URL")
+    else:
+        await update.message.reply_text("Por favor, proporciona una URL")
+
 #Comando /help
 async def help_command(update: Update, context: CallbackContext):
     await update.message.reply_text(
@@ -109,7 +173,13 @@ async def help_command(update: Update, context: CallbackContext):
         "/nslookup [IP/Host]-Resolver nombres de dominio en IP y viceversa \n"
         "/traceroute [IP/Host]- Muestra la ruta que siguen los datos a través de internet \n"
         "/wakeonlan [MAC]- Encender de manera remota a través de una red local o internet \n"
-        "/get [URL]- Para pedir recursos de un servidor"
+        "/get [URL]- Para pedir recursos HTTP Get \n"
+        "/post [URL]- Para pedir recursos HTTP Post \n"
+        "/put [URL]- Para pedir recursos HTTP Put \n"
+        "/options [URL]- Para pedir recursos HTTP Options \n"
+        "/patch [URL]- Para pedir recursos HTTP Update"
+
+
     )
 #Comando personalizado /echo
 async def echo(update: Update, context: CallbackContext):
@@ -139,6 +209,11 @@ def main():
     application.add_handler(CommandHandler("traceroute", handle_traceroute))
     application.add_handler(CommandHandler("wakeonlan", handle_wakeonlan))
     application.add_handler(CommandHandler("get", handle_get))
+    application.add_handler(CommandHandler("post", handle_post))
+    application.add_handler(CommandHandler("put", handle_put))
+    application.add_handler(CommandHandler("options", handle_options))
+    application.add_handler(CommandHandler("patch", handle_patch))
+
 
     #Manejador generico para mensajes que no son comandos
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
