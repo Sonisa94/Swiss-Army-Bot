@@ -1,1 +1,0 @@
-Sending magic packet to 255.255.255.255:9 with 00:e0:6c:68:2d:e7
