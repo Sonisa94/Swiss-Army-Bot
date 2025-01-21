@@ -5,13 +5,15 @@
 
 - **Network tools**: Tools designed to diagnose, analyze, and manage computer networks.
 - **HTTP tools**: These tools provide the ability to interact with web services using HTTP requests.
+- **User management** 
 
 ***Commands***
 
    - **General*:
       - **/start**: Welcome message.
       - **/help**: List of available commands.
-      - **/echo [message]**: Repeats your message.   
+      - **/echo [message]**: Repeats your message.
+      - **/request**: Request access to the bot’s endpoints.
   
    - **Network tools*:
 
