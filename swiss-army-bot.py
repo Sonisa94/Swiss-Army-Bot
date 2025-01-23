@@ -201,6 +201,54 @@ async def handle_patch(update: Update, context: CallbackContext):
     else:
         await update.message.reply_text("Sin autorizacion. Por favor, solicita permiso con el comando /request")
 
+#Comando /request
+async def handle_request(update: Update, context: CallbackContext) -> None:
+    user = update.message.from_user
+
+    usuarios_registrados = cargar_user_register_request()
+    if user.id not in usuarios_registrados:
+        usuarios_registrados.append(user.id)
+        guardar_user_register_request(usuarios_registrados)
+        print(f"Usuario registrado: {user.first_name} , ID: {user.id}")
+        await update.message.reply_text(f"Hola {user.first_name}! Gracias por usarnos :D, su solicitud sera revisada.")
+    else:
+        await update.message.reply_text(f"Hola {user.first_name}! Su solicitud se esta revisando.")
+
+
+
+#Comando /portscanning
+async def handle_portscanning(update: Update, context: CallbackContext):
+    if context.args:
+        #Obtener dominio o IP proporcionado por el usuario
+        target = context.args[0]
+        ports = context.args[1]
+        output_filename = generar_cadena()
+        result = portscanning(target, ports, output_filename)
+        with open(output_filename + '.txt', 'r') as file:
+            contenido = file.read()
+        os.remove(output_filename + '.txt')
+        #await update.message.reply_text(f"Ping a {target}:\n{result}")
+        await update.message.reply_text(contenido)
+
+    else:
+        await update.message.reply_text("Por favor, proporciona una dirección IP o dominio para hacer ping.")
+
+
+
+#Comando personalizado /echo
+async def echo(update: Update, context: CallbackContext):
+    if context.args:
+        await update.message.reply_text(" ".join(context.args))
+    else:
+        await update.message.reply_text("Por favor, escribe un mensaje con /echo ")
+
+
+#Respuesta a otros mensajes
+async def handle_message(update: Update, context: CallbackContext):
+    await update.message.reply_text(
+        "Lo siento, no lo he entendido. Usa /help para ver los comandos disponibles."
+    )
+
 #Comando /help
 async def help_command(update: Update, context: CallbackContext):
     await update.message.reply_text(
@@ -221,23 +269,14 @@ async def help_command(update: Update, context: CallbackContext):
         "/post [URL]- Para pedir recursos HTTP Post \n"
         "/put [URL]- Para pedir recursos HTTP Put \n"
         "/options [URL]- Para pedir recursos HTTP Options \n"
-        "/patch [URL]- Para pedir recursos HTTP Update"
+        "/patch [URL]- Para pedir recursos HTTP Update \n"
+        "/portscanning [IP/HOST]- Para verificar puertos"
 
 
 
     )
-#Comando /request
-async def handle_request(update: Update, context: CallbackContext) -> None:
-    user = update.message.from_user
 
-    usuarios_registrados = cargar_user_register_request()
-    if user.id not in usuarios_registrados:
-        usuarios_registrados.append(user.id)
-        guardar_user_register_request(usuarios_registrados)
-        print(f"Usuario registrado: {user.first_name} , ID: {user.id}")
-        await update.message.reply_text(f"Hola {user.first_name}! Gracias por usarnos :D, su solicitud sera revisada.")
-    else:
-        await update.message.reply_text(f"Hola {user.first_name}! Su solicitud se esta revisando.")
+
 
 #Comando personalizado /echo
 async def echo(update: Update, context: CallbackContext):
@@ -269,6 +308,7 @@ def main():
     application.add_handler(CommandHandler("nslookup", handle_nslookup))
     application.add_handler(CommandHandler("traceroute", handle_traceroute))
     application.add_handler(CommandHandler("wakeonlan", handle_wakeonlan))
+    application.add_handler(CommandHandler("portscanning", handle_portscanning))
 
     #HTTP Tools
     application.add_handler(CommandHandler("get", handle_get))
