@@ -22,6 +22,7 @@
        - **/nslookup [IP/HOST]**: Resolve a domain to an IP or viceversa.
        - **/traceroute [IP/HOST]**: Traces the route to the host.
        - **/wakeonlan [MAC]**: Sends a Wake-On-Lan signal.
+       - **/portscanning [IP/HOST]**: Scans the target IP address or domain for open ports to identify accessible services.
          
   - **HTTP tools*:
     
